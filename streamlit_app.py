@@ -33,7 +33,7 @@ if submit_button and user_input.strip():
             response= requests.post(f"{BASE_URL}/query",json=payload)
         
         if response.status_code == 200:
-            answer= response.json()["answer"]
+            answer= response.json().get("answer","No answer recieved.")
             markdown_content= f"""# AI Travel Plan
             {answer}
             This is AI generated travel plan, please verify the information :)

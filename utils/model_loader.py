@@ -1,28 +1,32 @@
 import os
-from dotenv import load_dotenv
-from typing import Literal,Optional,Any
-from pydantic import BaseModel, Field
-from langchain_huggingface import HuggingFaceEmbeddings
-from utils.config_loader import load_config
+from typing import Any, Literal, Optional
+
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field
+
+from utils.config_loader import load_config
 
 
 class ConfigLoader:
     def __init__(self):
-        print(f"Loading config...")
+        print("Loading config...")
         self.config = load_config()
-    def __getitem__(self,key):
+
+    def __getitem__(self, key):
         return self.config[key]
+
 
 class ModelLoader(BaseModel):
     model_provider: Literal["groq", "openai"] = "groq"
     config: Optional[ConfigLoader] = Field(default=None, exclude=True)
-    
+
     def model_post_init(self, __context: Any) -> None:
         self.config = ConfigLoader()
-    class Config : 
+
+    class Config:
         arbitrary_types_allowed = True
+
     def load_llm(self):
         """
         Load and return LLM Model.
